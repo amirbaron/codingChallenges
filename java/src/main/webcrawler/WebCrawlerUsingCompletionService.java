@@ -1,9 +1,11 @@
 package webcrawler;
 
+import java.io.Closeable;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -21,12 +23,13 @@ public class WebCrawlerUsingCompletionService implements WebCrawler {
     @Override
     public Set<String> startCrawling(String rootUrl) {
         Set<String> visitedLinks = ConcurrentHashMap.newKeySet();
-        ExecutorCompletionService<Set<String>> completionService = new ExecutorCompletionService(Executors.newFixedThreadPool(this.maxThreads));
-        visitedLinks.add(rootUrl);
-        completionService.submit(() -> crawlLink(rootUrl));
-        AtomicInteger numberOfJobs = new AtomicInteger(1);
-        while (numberOfJobs.get() > 0) {
-            try {
+        ExecutorService executor = Executors.newFixedThreadPool(this.maxThreads);
+        ExecutorCompletionService<Set<String>> completionService = new ExecutorCompletionService<>(executor);
+        try (Closeable closeable = executor::shutdown) {
+            visitedLinks.add(rootUrl);
+            completionService.submit(() -> crawlLink(rootUrl));
+            AtomicInteger numberOfJobs = new AtomicInteger(1);
+            while (numberOfJobs.get() > 0) {
                 Future<Set<String>> future = completionService.take();
                 numberOfJobs.decrementAndGet();
                 Set<String> currentLinks = future.get();
@@ -36,10 +39,12 @@ public class WebCrawlerUsingCompletionService implements WebCrawler {
                             numberOfJobs.getAndIncrement();
                             completionService.submit(() -> crawlLink(nextLink));
                         });
-            } catch (Exception e) {
-                throw new RuntimeException(e);
             }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+
         return visitedLinks;
     }
 
