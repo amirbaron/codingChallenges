@@ -27,7 +27,6 @@ public class WebCrawlerUsingCompletionService implements WebCrawler {
         AtomicInteger numberOfJobs = new AtomicInteger(1);
         while (numberOfJobs.get() > 0) {
             try {
-                numberOfJobs.getAndDecrement();
                 Future<Set<String>> future = completionService.take();
                 numberOfJobs.decrementAndGet();
                 Set<String> currentLinks = future.get();
