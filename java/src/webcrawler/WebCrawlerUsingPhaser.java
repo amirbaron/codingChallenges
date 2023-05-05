@@ -2,6 +2,7 @@ package webcrawler;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -13,11 +14,11 @@ public class WebCrawlerUsingPhaser implements WebCrawler {
     private static final Logger LOGGER = Logger.getLogger(WebCrawlerUsingPhaser.class.getName());
 
     private final int maxThreads;
-    private final LinkFetcher linkFetcher;
+    private final UrlFetcher urlFetcher;
 
-    public WebCrawlerUsingPhaser(int maxThreads, LinkFetcher linkFetcher) {
+    public WebCrawlerUsingPhaser(int maxThreads, UrlFetcher urlFetcher) {
         this.maxThreads = maxThreads;
-        this.linkFetcher = linkFetcher;
+        this.urlFetcher = urlFetcher;
     }
 
     @Override
@@ -49,10 +50,12 @@ public class WebCrawlerUsingPhaser implements WebCrawler {
         phaser.register();
         executor.execute(() -> {
             try {
-                Set<String> currentLinks = linkFetcher.fetchUrl(currentUrl);
-                currentLinks.stream()
-                        .filter(visitedLinks::add)
-                        .forEach(nextLink -> crawl(nextLink, visitedLinks, executor, phaser));
+                Set<String> currentLinks = urlFetcher.fetchUrl(currentUrl);
+                if (Objects.nonNull(currentLinks)) {
+                    currentLinks.stream()
+                            .filter(visitedLinks::add)
+                            .forEach(nextLink -> crawl(nextLink, visitedLinks, executor, phaser));
+                }
             } catch (Exception e) {
                 LOGGER.warning("Error while fetching links for " + currentUrl + ": " + e.getMessage());
             } finally {

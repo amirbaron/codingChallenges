@@ -2,25 +2,28 @@ package webcrawler;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 import java.util.Set;
+import java.util.stream.Stream;
 
 public class WebCrawlerUsingPhaserTest {
-    private LinkFetcher linkFetcher;
-    private WebCrawlerUsingPhaser webCrawlerUsingPhaser;
-
-    @BeforeEach
-    public void setUp() {
-        linkFetcher = Mockito.mock(LinkFetcher.class);
-        webCrawlerUsingPhaser = new WebCrawlerUsingPhaser(2, linkFetcher);
+    public static Stream<Arguments> crawlerInstance() {
+        UrlFetcher urlFetcherForPhaser = Mockito.mock(UrlFetcher.class);
+        UrlFetcher urlFetcherForCompletionService = Mockito.mock(UrlFetcher.class);
+        return Stream.of(Arguments.of(new WebCrawlerUsingPhaser(2, urlFetcherForPhaser), urlFetcherForPhaser),
+                Arguments.of(new WebCrawlerUsingCompletionService(2, urlFetcherForPhaser), urlFetcherForCompletionService)
+        );
     }
 
-    @Test
-    public void testCrawler() {
-        setupMockLinkFetcher();
+    @ParameterizedTest
+    @MethodSource("crawlerInstance")
+    public void testCrawler(WebCrawler crawler, UrlFetcher urlFetcher) {
+        setupMockLinkFetcher(urlFetcher);
 
-        Set<String> links = webCrawlerUsingPhaser.startCrawling("http://www.google.com");
+        Set<String> links = crawler.startCrawling("http://www.google.com");
 
         Assertions.assertEquals(Set.of(
                 "http://www.google.com",
@@ -33,27 +36,29 @@ public class WebCrawlerUsingPhaserTest {
         ), links);
     }
 
-    @Test
-    public void testCrawlerWhenLinkFetcherReturnsEmptySet() {
-        Mockito.when(linkFetcher.fetchUrl(Mockito.anyString())).thenReturn(Set.of());
+    @ParameterizedTest
+    @MethodSource("crawlerInstance")
+    public void testCrawlerWhenLinkFetcherReturnsEmptySet(WebCrawler crawler, UrlFetcher urlFetcher) {
+        Mockito.when(urlFetcher.fetchUrl(Mockito.anyString())).thenReturn(Set.of());
 
-        Set<String> links = webCrawlerUsingPhaser.startCrawling("http://www.google.com");
-
-        Assertions.assertEquals(Set.of("http://www.google.com"), links);
-    }
-
-    @Test
-    public void testCrawlerWhenLinkFetcherReturnsNull() {
-        Mockito.when(linkFetcher.fetchUrl(Mockito.anyString())).thenReturn(null);
-
-        Set<String> links = webCrawlerUsingPhaser.startCrawling("http://www.google.com");
+        Set<String> links = crawler.startCrawling("http://www.google.com");
 
         Assertions.assertEquals(Set.of("http://www.google.com"), links);
     }
 
-    private void setupMockLinkFetcher() {
-        Mockito.when(linkFetcher.fetchUrl("http://www.google.com")).thenReturn(Set.of("http://www.google.com/1", "http://www.google.com/2"));
-        Mockito.when(linkFetcher.fetchUrl("http://www.google.com/1")).thenReturn(Set.of("http://www.google.com/1/1", "http://www.google.com/1/2"));
-        Mockito.when(linkFetcher.fetchUrl("http://www.google.com/2")).thenReturn(Set.of("http://www.google.com/2/1", "http://www.google.com/2/2"));
+    @ParameterizedTest
+    @MethodSource("crawlerInstance")
+    public void testCrawlerWhenLinkFetcherReturnsNull(WebCrawler crawler, UrlFetcher urlFetcher) {
+        Mockito.when(urlFetcher.fetchUrl(Mockito.anyString())).thenReturn(null);
+
+        Set<String> links = crawler.startCrawling("http://www.google.com");
+
+        Assertions.assertEquals(Set.of("http://www.google.com"), links);
+    }
+
+    private void setupMockLinkFetcher(UrlFetcher urlFetcher) {
+        Mockito.when(urlFetcher.fetchUrl("http://www.google.com")).thenReturn(Set.of("http://www.google.com/1", "http://www.google.com/2"));
+        Mockito.when(urlFetcher.fetchUrl("http://www.google.com/1")).thenReturn(Set.of("http://www.google.com/1/1", "http://www.google.com/1/2"));
+        Mockito.when(urlFetcher.fetchUrl("http://www.google.com/2")).thenReturn(Set.of("http://www.google.com/2/1", "http://www.google.com/2/2"));
     }
 }
