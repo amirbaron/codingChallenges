@@ -1,6 +1,5 @@
 package webcrawler;
 
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -47,7 +46,7 @@ public class WebCrawlerUsingCompletionService implements WebCrawler {
 
     private Set<String> crawlLink(String rootUrl) {
         Set<String> res = this.urlFetcher.fetchUrl(rootUrl);
-        if (Objects.nonNull(res)){
+        if (Objects.nonNull(res)) {
             return res;
         }
         return Set.of();
