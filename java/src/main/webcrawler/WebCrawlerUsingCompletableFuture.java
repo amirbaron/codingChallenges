@@ -21,9 +21,14 @@ public class WebCrawlerUsingCompletableFuture implements WebCrawler {
     public Set<String> startCrawling(String rootUrl) {
         Set<String> visitedLinks = ConcurrentHashMap.newKeySet();
         ExecutorService service  = Executors.newFixedThreadPool(this.maxThreads);
-        CompletableFuture<Void> future = crawlLink(service, visitedLinks, rootUrl);
-        future.join();
         visitedLinks.add(rootUrl);
+        try {
+            CompletableFuture<Void> future = crawlLink(service, visitedLinks, rootUrl);
+            future.join();
+        }
+        finally {
+            service.shutdown();
+        }
         return visitedLinks;
     }
 
