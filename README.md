@@ -1,4 +1,4 @@
-# codingChallenges
+# coding challenges
 My solutions to common challenges in  various languages 
 
 ## Java
