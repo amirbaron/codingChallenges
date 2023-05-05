@@ -1,8 +1,6 @@
 package webcrawler;
 
-import java.io.Closeable;
 import java.io.IOException;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -25,9 +23,10 @@ public class WebCrawlerUsingPhaser implements WebCrawler {
     public Set<String> startCrawling(String rootUrl) {
         Set<String> visitedLinks = ConcurrentHashMap.newKeySet();
         ExecutorService executor = Executors.newFixedThreadPool(maxThreads);
-        try (Closeable close = executor::shutdown) {
+        try (AutoCloseable close = executor::shutdown) {
             crawlLinks(rootUrl, visitedLinks, executor);
-        } catch (IOException | InterruptedException e) {
+        } catch (Exception e) {
+            Thread.currentThread().interrupt();
             throw new RuntimeException(e);
         }
 
@@ -51,20 +50,17 @@ public class WebCrawlerUsingPhaser implements WebCrawler {
         executor.execute(() -> {
             try {
                 Set<String> currentLinks = urlFetcher.fetchUrl(currentUrl);
-                if (Objects.nonNull(currentLinks)) {
+                if (currentLinks != null) {
                     currentLinks.stream()
                             .filter(visitedLinks::add)
                             .forEach(nextLink -> crawl(nextLink, visitedLinks, executor, phaser));
                 }
             } catch (Exception e) {
                 LOGGER.warning("Error while fetching links for " + currentUrl + ": " + e.getMessage());
+                phaser.arriveAndDeregister();
             } finally {
                 phaser.arrive();
             }
         });
     }
 }
-
-
-
-
