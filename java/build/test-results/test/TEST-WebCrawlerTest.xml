@@ -1,27 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="WebCrawlerTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2023-05-05T19:43:53" hostname="Amir-Baron-MBP.local" time="0.052">
+<testsuite name="WebCrawlerTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2023-05-05T20:33:52" hostname="Amir-Baron-MBP.local" time="0.074">
   <properties/>
-  <testcase name="[1] webcrawler.WebCrawlerUsingPhaser@781a9412, Mock for UrlFetcher, hashCode: 2049348234" classname="WebCrawlerTest" time="0.029"/>
-  <testcase name="[2] webcrawler.WebCrawlerUsingCompletionService@4a29f290, Mock for UrlFetcher, hashCode: 669200356" classname="WebCrawlerTest" time="0.002"/>
-  <testcase name="[3] webcrawler.WebCrawlerUsingCompletableFuture@3c89bb12, Mock for UrlFetcher, hashCode: 205278236" classname="WebCrawlerTest" time="0.002"/>
-  <testcase name="[1] webcrawler.WebCrawlerUsingPhaser@b9dfc5a, Mock for UrlFetcher, hashCode: 1704535540" classname="WebCrawlerTest" time="0.002"/>
-  <testcase name="[2] webcrawler.WebCrawlerUsingCompletionService@659a2455, Mock for UrlFetcher, hashCode: 1288815068" classname="WebCrawlerTest" time="0.001"/>
-  <testcase name="[3] webcrawler.WebCrawlerUsingCompletableFuture@426e505c, Mock for UrlFetcher, hashCode: 1206946689" classname="WebCrawlerTest" time="0.002"/>
-  <testcase name="[1] webcrawler.WebCrawlerUsingPhaser@1bc425e7, Mock for UrlFetcher, hashCode: 1871580398" classname="WebCrawlerTest" time="0.003"/>
-  <testcase name="[2] webcrawler.WebCrawlerUsingCompletionService@3a91d146, Mock for UrlFetcher, hashCode: 1632300236" classname="WebCrawlerTest" time="0.002"/>
-  <testcase name="[3] webcrawler.WebCrawlerUsingCompletableFuture@6d4a65c6, Mock for UrlFetcher, hashCode: 1360440329" classname="WebCrawlerTest" time="0.001"/>
+  <testcase name="[1] webcrawler.WebCrawlerUsingPhaser@6d64b553, Mock for UrlFetcher, hashCode: 594916129" classname="WebCrawlerTest" time="0.063"/>
+  <testcase name="[2] webcrawler.WebCrawlerUsingCompletionService@1bc425e7, Mock for UrlFetcher, hashCode: 1075996552" classname="WebCrawlerTest" time="0.004"/>
+  <testcase name="[3] webcrawler.WebCrawlerUsingCompletableFuture@aa004a0, Mock for UrlFetcher, hashCode: 1096411163" classname="WebCrawlerTest" time="0.004"/>
   <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[May 05, 2023 10:43:53 PM webcrawler.WebCrawlerUsingPhaser crawlLinks
+  <system-err><![CDATA[May 05, 2023 11:33:52 PM webcrawler.WebCrawlerUsingPhaser crawlLinks
 INFO: Crawling started
-May 05, 2023 10:43:53 PM webcrawler.WebCrawlerUsingPhaser crawlLinks
-INFO: Crawling completed
-May 05, 2023 10:43:53 PM webcrawler.WebCrawlerUsingPhaser crawlLinks
-INFO: Crawling started
-May 05, 2023 10:43:53 PM webcrawler.WebCrawlerUsingPhaser crawlLinks
-INFO: Crawling completed
-May 05, 2023 10:43:53 PM webcrawler.WebCrawlerUsingPhaser crawlLinks
-INFO: Crawling started
-May 05, 2023 10:43:53 PM webcrawler.WebCrawlerUsingPhaser crawlLinks
+May 05, 2023 11:33:52 PM webcrawler.WebCrawlerUsingPhaser crawlLinks
 INFO: Crawling completed
 ]]></system-err>
 </testsuite>

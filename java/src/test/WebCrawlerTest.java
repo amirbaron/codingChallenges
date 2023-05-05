@@ -1,5 +1,6 @@
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -18,10 +19,11 @@ public class WebCrawlerTest {
         UrlFetcher urlFetcherForCompletionService = Mockito.mock(UrlFetcher.class);
         UrlFetcher urlFetcherForCompletableFuture = Mockito.mock(UrlFetcher.class);
         return Stream.of(Arguments.of(new WebCrawlerUsingPhaser(2, urlFetcherForPhaser), urlFetcherForPhaser),
-                Arguments.of(new WebCrawlerUsingCompletionService(2, urlFetcherForPhaser), urlFetcherForCompletionService),
-                Arguments.of(new WebCrawlerUsingCompletableFuture(2, urlFetcherForPhaser), urlFetcherForCompletableFuture)
+                Arguments.of(new WebCrawlerUsingCompletionService(2, urlFetcherForCompletionService), urlFetcherForCompletionService),
+                Arguments.of(new WebCrawlerUsingCompletableFuture(2, urlFetcherForCompletableFuture), urlFetcherForCompletableFuture)
         );
     }
+
 
     @ParameterizedTest
     @MethodSource("crawlerInstance")
@@ -66,4 +68,5 @@ public class WebCrawlerTest {
         Mockito.when(urlFetcher.fetchUrl("http://www.google.com/1")).thenReturn(Set.of("http://www.google.com/1/1", "http://www.google.com/1/2"));
         Mockito.when(urlFetcher.fetchUrl("http://www.google.com/2")).thenReturn(Set.of("http://www.google.com/2/1", "http://www.google.com/2/2"));
     }
+
 }
