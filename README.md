@@ -2,6 +2,6 @@
 My solutions to common challenges in  various languages 
 
 ## Java
-* Multi threader Web crawler using phaser  
-* Multi threader Web crawler using executer completion service
-* Multi threader Web crawler using completable future
+* Multi threaded Web crawler using phaser  
+* Multi threaded Web crawler using executer completion service
+* Multi threaded Web crawler using completable future
